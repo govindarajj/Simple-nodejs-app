@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: simple-nodejs-app-deploy
-        image: docker.io/govix/simple-nodejs-app:latest
+        image: govix/simple-nodejs-app:latest
         ports:
         - containerPort: 3000
         readinessProbe:
