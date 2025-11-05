@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-nodejs-app-deploy
+  labels:
+    app: simple-nodejs-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: simple-nodejs-app
+  template:
+    metadata:
+      labels:
+        app: simple-nodejs-app
+    spec:
+      containers:
+      - name: simple-nodejs-app-deploy
+        image: docker.io/govix/simple-nodejs-app:latest
+        ports:
+        - containerPort: 3000
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-nodejs-svc
+spec:
+  type: NodePort
+  selector:
+    app: simple-nodejs-app
+  ports:
+  - port: 3000
+    targetPort: 3000
+    nodePort: 30080
